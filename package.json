@@ -1,0 +1,16 @@
+{
+  "name": "cctimer-scrambles",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "peerDependencies": {
+    "react": "^17.x"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "raphael": "^2.3.0",
+    "react-raphael": "^0.9.0"
+  }
+}
