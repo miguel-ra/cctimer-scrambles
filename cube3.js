@@ -1397,8 +1397,7 @@ function $phase2(obj, edge, esym, corn, csym, mid, maxl, depth, lm) {
 }
 
 function $solution(obj, facelets) {
-  var $e0, cc, i, s;
-  init_0();
+  var cc, i;
   for (i = 0; i < 54; ++i) {
     switch (facelets.charCodeAt(i)) {
       case 85:
@@ -1461,51 +1460,57 @@ _.useSeparator = false;
 _.valid1 = 0;
 _.valid2 = 0;
 
-function init_0() {
+async function init_0() {
   if (inited) return;
-  $clinit_Util();
-  setTimeout(() => {
-    // [0/9] Initializing Cubie Cube...
-    $clinit_CubieCube();
-    FlipR2S = Array(2048);
-    TwistR2S = Array(2187);
-    EPermR2S = Array(40320);
-    setTimeout(() => {
-      // [1/9] Initializing Sym2Raw...
-      initSym2Raw();
-      setTimeout(() => {
-        // [2/9] Initializing CoordCube...
-        $clinit_CoordCube();
-        setTimeout(() => {
-          // [3/9] Initializing Perm, Flip, and Twist Moves...
-          initCPermMove();
-          initEPermMove();
-          initFlipMove();
-          initTwistMove();
-          setTimeout(() => {
-            // [4/9] Initializing UDSlice...
-            EPermR2S = null;
-            FlipR2S = null;
-            TwistR2S = null;
-            initUDSliceMove();
-            initUDSliceConj();
-            setTimeout(() => {
-              // [5/9] Initializing Mid3Move...
-              initMid3Move();
-              initMid32MPerm();
-              initCParity();
-              setTimeout(() => {
-                // [6/9] Initializing Perms...
-                initMPermMove();
-                initMPermConj();
-                setTimeout(() => {
-                  // [7/9] Initializing TwistFlipSlicePrun.. .
-                  initTwistFlipSlicePrun();
-                  setTimeout(() => {
-                    // [8/9] Initializing MCEPermPrum...
-                    initMCEPermPrun();
-                    // [9/9] Done initializing 3x3x3...
-                    inited = true;
+  return new Promise(function (resolve) {
+    $clinit_Util();
+    setTimeout(function () {
+      console.log("[0/9] Initializing Cubie Cube...");
+      $clinit_CubieCube();
+      FlipR2S = Array(2048);
+      TwistR2S = Array(2187);
+      EPermR2S = Array(40320);
+      setTimeout(function () {
+        console.log("[1/9] Initializing Sym2Raw...");
+        initSym2Raw();
+        setTimeout(function () {
+          console.log("[2/9] Initializing CoordCube...");
+          $clinit_CoordCube();
+          setTimeout(function () {
+            console.log("[3/9] Initializing Perm, Flip, and Twist Moves...");
+            initCPermMove();
+            initEPermMove();
+            initFlipMove();
+            initTwistMove();
+            setTimeout(function () {
+              console.log("[4/9] Initializing UDSlice...");
+              EPermR2S = null;
+              FlipR2S = null;
+              TwistR2S = null;
+              initUDSliceMove();
+              initUDSliceConj();
+              setTimeout(function () {
+                console.log("[5/9] Initializing Mid3Move...");
+                initMid3Move();
+                initMid32MPerm();
+                initCParity();
+                setTimeout(function () {
+                  console.log("[6/9] Initializing Perms...");
+                  initMPermMove();
+                  initMPermConj();
+                  setTimeout(function () {
+                    console.log("[7/9] Initializing TwistFlipSlicePrun.. .");
+                    initTwistFlipSlicePrun();
+                    setTimeout(function () {
+                      console.log("[8/9] Initializing MCEPermPrum...");
+                      initMCEPermPrun();
+                      setTimeout(function () {
+                        console.log("[9/9] Done initializing 3x3x3...");
+                        inited = true;
+                        console.log("resolve");
+                        resolve();
+                      }, 0);
+                    }, 0);
                   }, 0);
                 }, 0);
               }, 0);
@@ -1514,7 +1519,7 @@ function init_0() {
         }, 0);
       }, 0);
     }, 0);
-  }, 0);
+  });
 }
 
 function randomCube_0() {
@@ -1795,16 +1800,16 @@ var Cnk,
 var initialized = false;
 var search;
 
-var ini = function () {
+async function ini() {
   if (!initialized) {
     search = new Search();
-    init_0(statusCallback);
+    await init_0();
     initialized = true;
   }
-};
+}
 
-var getRandomScramble = function () {
-  ini();
+async function getRandomScramble() {
+  await ini();
 
   var posit = randomCube_0();
   var solution = $solution(search, posit);
@@ -1813,7 +1818,7 @@ var getRandomScramble = function () {
     state: posit,
     string: solution.trim(),
   };
-};
+}
 
 export default {
   getRandomScramble,
