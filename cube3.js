@@ -381,6 +381,7 @@ function initTwistFlipSlicePrun() {
         }
       }
     }
+  }
   for (i = 0; i < 160380; ++i) {
     UDSliceTwistPrun[i] = -1;
   }
@@ -1463,39 +1464,54 @@ _.valid2 = 0;
 function init_0() {
   if (inited) return;
   $clinit_Util();
-  // [0/9] Initializing Cubie Cube...
-  $clinit_CubieCube();
-  FlipR2S = Array(2048);
-  TwistR2S = Array(2187);
-  EPermR2S = Array(40320);
-  // [1/9] Initializing Sym2Raw...
-  initSym2Raw();
-  // [2/9] Initializing CoordCube...
-  $clinit_CoordCube();
-  // [3/9] Initializing Perm, Flip, and Twist Moves...
-  initCPermMove();
-  initEPermMove();
-  initFlipMove();
-  initTwistMove();
-  // [4/9] Initializing UDSlice...
-  EPermR2S = null;
-  FlipR2S = null;
-  TwistR2S = null;
-  initUDSliceMove();
-  initUDSliceConj();
-  // [5/9] Initializing Mid3Move...
-  initMid3Move();
-  initMid32MPerm();
-  initCParity();
-  // [6/9] Initializing Perms...
-  initMPermMove();
-  initMPermConj();
-  // [7/9] Initializing TwistFlipSlicePrun.. .
-  initTwistFlipSlicePrun();
-  // [8/9] Initializing MCEPermPrum...
-  initMCEPermPrun();
-  // [9/9] Done initializing 3x3x3...
-  inited = true;
+  setTimeout(() => {
+    // [0/9] Initializing Cubie Cube...
+    $clinit_CubieCube();
+    FlipR2S = Array(2048);
+    TwistR2S = Array(2187);
+    EPermR2S = Array(40320);
+    setTimeout(() => {
+      // [1/9] Initializing Sym2Raw...
+      initSym2Raw();
+      setTimeout(() => {
+        // [2/9] Initializing CoordCube...
+        $clinit_CoordCube();
+        setTimeout(() => {
+          // [3/9] Initializing Perm, Flip, and Twist Moves...
+          initCPermMove();
+          initEPermMove();
+          initFlipMove();
+          initTwistMove();
+          setTimeout(() => {
+            // [4/9] Initializing UDSlice...
+            EPermR2S = null;
+            FlipR2S = null;
+            TwistR2S = null;
+            initUDSliceMove();
+            initUDSliceConj();
+            setTimeout(() => {
+              // [5/9] Initializing Mid3Move...
+              initMid3Move();
+              initMid32MPerm();
+              initCParity();
+              setTimeout(() => {
+                // [6/9] Initializing Perms...
+                initMPermMove();
+                initMPermConj();
+                setTimeout(() => {
+                  // [7/9] Initializing TwistFlipSlicePrun.. .
+                  initTwistFlipSlicePrun();
+                  setTimeout(() => {
+                    // [8/9] Initializing MCEPermPrum...
+                    initMCEPermPrun();
+                    // [9/9] Done initializing 3x3x3...
+                    inited = true;
+                  }, 0);
+                }, 0);
+              }, 0);
+            }, 0);
+          }, 0);
+        }, 0);}, 0);}, 0);}, 0);
 }
 
 function randomCube_0() {
