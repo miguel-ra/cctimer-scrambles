@@ -92,7 +92,7 @@ function initFlipMove() {
   }
 }
 
-function initMCEPermPrun(callback) {
+function initMCEPermPrun() {
   var SymState,
     c,
     check,
@@ -173,15 +173,6 @@ function initMCEPermPrun(callback) {
         }
       }
     }
-    if (done / 66432 > 0.01) {
-      callback(
-        "MEPermPrun: " +
-          Math.floor((done * 100) / 66432) +
-          "% (" +
-          done +
-          "/66432)"
-      );
-    }
   }
   for (i = 0; i < 66432; ++i) {
     MCPermPrun[i] = -1;
@@ -228,15 +219,6 @@ function initMCEPermPrun(callback) {
           }
         }
       }
-    }
-    if (done / 66432 > 0.01) {
-      callback(
-        "MCPermPrun: " +
-          Math.floor((done * 100) / 66432) +
-          "% (" +
-          done +
-          "/66432)"
-      );
     }
   }
 }
@@ -289,7 +271,7 @@ function initMid3Move() {
   }
 }
 
-function initTwistFlipSlicePrun(callback) {
+function initTwistFlipSlicePrun() {
   var SymState,
     SymStateF,
     c,
@@ -399,16 +381,6 @@ function initTwistFlipSlicePrun(callback) {
         }
       }
     }
-    if (done / 870912 > 0.01) {
-      callback(
-        "TwistFlipPrun: " +
-          Math.floor((done * 100) / 870912) +
-          "% (" +
-          done +
-          "/870912)"
-      );
-    }
-  }
   for (i = 0; i < 160380; ++i) {
     UDSliceTwistPrun[i] = -1;
   }
@@ -454,15 +426,6 @@ function initTwistFlipSlicePrun(callback) {
           }
         }
       }
-    }
-    if (done / 160380 > 0.01) {
-      callback(
-        "UDSliceTwistPrun: " +
-          Math.floor((done * 100) / 160380) +
-          "% (" +
-          done +
-          "/160380)"
-      );
     }
   }
   for (i = 0; i < 166320; ++i) {
@@ -510,15 +473,6 @@ function initTwistFlipSlicePrun(callback) {
           }
         }
       }
-    }
-    if (done / 166320 > 0.01) {
-      callback(
-        "UDSliceFlipPrun: " +
-          Math.floor((done * 100) / 166320) +
-          "% (" +
-          done +
-          "/166320)"
-      );
     }
   }
 }
@@ -1506,41 +1460,41 @@ _.useSeparator = false;
 _.valid1 = 0;
 _.valid2 = 0;
 
-function init_0(safeStatusCallback) {
+function init_0() {
   if (inited) return;
   $clinit_Util();
-  safeStatusCallback("[0/9] Initializing Cubie Cube...");
+  // [0/9] Initializing Cubie Cube...
   $clinit_CubieCube();
   FlipR2S = Array(2048);
   TwistR2S = Array(2187);
   EPermR2S = Array(40320);
-  safeStatusCallback("[1/9] Initializing Sym2Raw...");
+  // [1/9] Initializing Sym2Raw...
   initSym2Raw();
-  safeStatusCallback("[2/9] Initializing CoordCube...");
+  // [2/9] Initializing CoordCube...
   $clinit_CoordCube();
-  safeStatusCallback("[3/9] Initializing Perm, Flip, and Twist Moves...");
+  // [3/9] Initializing Perm, Flip, and Twist Moves...
   initCPermMove();
   initEPermMove();
   initFlipMove();
   initTwistMove();
-  safeStatusCallback("[4/9] Initializing UDSlice...");
+  // [4/9] Initializing UDSlice...
   EPermR2S = null;
   FlipR2S = null;
   TwistR2S = null;
   initUDSliceMove();
   initUDSliceConj();
-  safeStatusCallback("[5/9] Initializing Mid3Move...");
+  // [5/9] Initializing Mid3Move...
   initMid3Move();
   initMid32MPerm();
   initCParity();
-  safeStatusCallback("[6/9] Initializing Perms...");
+  // [6/9] Initializing Perms...
   initMPermMove();
   initMPermConj();
-  safeStatusCallback("[7/9] Initializing TwistFlipSlicePrun.. .");
-  initTwistFlipSlicePrun(safeStatusCallback);
-  safeStatusCallback("[8/9] Initializing MCEPermPrum...");
-  initMCEPermPrun(safeStatusCallback);
-  safeStatusCallback("[9/9] Done initializing 3x3x3...");
+  // [7/9] Initializing TwistFlipSlicePrun.. .
+  initTwistFlipSlicePrun();
+  // [8/9] Initializing MCEPermPrum...
+  initMCEPermPrun();
+  // [9/9] Done initializing 3x3x3...
   inited = true;
 }
 
@@ -1819,23 +1773,15 @@ var Cnk,
   std2ud,
   ud2std;
 
-//"UF UR UB UL DF DR DB DL FR FL BR BL UFR URB UBL ULF DRF DFL DLB DBR URFLBD";
-//0  3  6  9  12 15 18 21 24 27 30 33 36  40  44  48  52  56  60  64  68
-
 var initialized = false;
 var search;
 
-var ini = function (callback, _, statusCallback) {
-  if (typeof statusCallback !== "function") {
-    statusCallback = function () {};
-  }
-
+var ini = function () {
   if (!initialized) {
     search = new Search();
     init_0(statusCallback);
     initialized = true;
   }
-  if (callback) setTimeout(callback, 0);
 };
 
 var getRandomScramble = function () {
