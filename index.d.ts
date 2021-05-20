@@ -8,6 +8,6 @@ export type ScrambleImageProps = {
 } & HTMLProps<HTMLElement>;
 
 export type ScrambleGenerator = {
-  getRandomScramble: () => (Scramble | Promise<Scramble>);
+  getRandomScramble: () => Scramble;
   ScrambleImage: (props: ScrambleImageProps) => JSX.Element;
 };

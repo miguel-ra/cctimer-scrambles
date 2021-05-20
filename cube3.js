@@ -92,80 +92,78 @@ function initFlipMove() {
   }
 }
 
-async function initMCEPermPrun() {
-  return new Promise(function (resolve) {
-    var SymState,
-      c,
-      check,
-      corn,
-      cornx,
-      d,
-      depth,
-      done,
-      edge,
-      edgex,
-      i,
-      idx,
-      idxx,
-      inv,
-      j,
-      m_0,
-      mid,
-      midx,
-      select,
-      sym,
-      symx;
-    c = new CubieCube_0();
-    d = new CubieCube_0();
-    depth = 0;
-    done = 1;
-    SymState = Array(2768);
-    for (i = 0; i < 2768; ++i) {
-      SymState[i] = 0;
-      set8Perm(c.ep, EPermS2R[i]);
-      for (j = 1; j < 16; ++j) {
-        EdgeMult(CubeSym[SymInv[j]], c, temp_0);
-        EdgeMult(temp_0, CubeSym[j], d);
-        binarySearch(EPermS2R, get8Perm(d.ep)) != 65535 &&
-          (SymState[i] = SymState[i] | (1 << j));
-      }
+function initMCEPermPrun() {
+  var SymState,
+    c,
+    check,
+    corn,
+    cornx,
+    d,
+    depth,
+    done,
+    edge,
+    edgex,
+    i,
+    idx,
+    idxx,
+    inv,
+    j,
+    m_0,
+    mid,
+    midx,
+    select,
+    sym,
+    symx;
+  c = new CubieCube_0();
+  d = new CubieCube_0();
+  depth = 0;
+  done = 1;
+  SymState = Array(2768);
+  for (i = 0; i < 2768; ++i) {
+    SymState[i] = 0;
+    set8Perm(c.ep, EPermS2R[i]);
+    for (j = 1; j < 16; ++j) {
+      EdgeMult(CubeSym[SymInv[j]], c, temp_0);
+      EdgeMult(temp_0, CubeSym[j], d);
+      binarySearch(EPermS2R, get8Perm(d.ep)) != 65535 &&
+        (SymState[i] = SymState[i] | (1 << j));
     }
+  }
+  for (i = 0; i < 66432; ++i) {
+    MEPermPrun[i] = -1;
+  }
+  MEPermPrun[0] = 0;
+  while (done < 66432) {
+    inv = depth > 7;
+    select = inv ? -1 : depth;
+    check = inv ? depth : -1;
+    ++depth;
     for (i = 0; i < 66432; ++i) {
-      MEPermPrun[i] = -1;
-    }
-    MEPermPrun[0] = 0;
-    while (done < 66432) {
-      inv = depth > 7;
-      select = inv ? -1 : depth;
-      check = inv ? depth : -1;
-      ++depth;
-      for (i = 0; i < 66432; ++i) {
-        if (MEPermPrun[i] === select) {
-          mid = i % 24;
-          edge = ~~(i / 24);
-          for (m_0 = 0; m_0 < 10; ++m_0) {
-            edgex = EPermMove[edge][m_0];
-            symx = edgex & 15;
-            midx = MPermConj[MPermMove[mid][m_0]][symx];
-            edgex >>>= 4;
-            idx = edgex * 24 + midx;
-            if (MEPermPrun[idx] === check) {
-              ++done;
-              if (inv) {
-                MEPermPrun[i] = depth;
-                break;
-              } else {
-                MEPermPrun[idx] = depth;
-                sym = SymState[edgex];
-                if (sym != 0) {
-                  for (j = 1; j < 16; ++j) {
-                    sym = sym >> 1;
-                    if ((sym & 1) === 1) {
-                      idxx = edgex * 24 + MPermConj[midx][j];
-                      if (MEPermPrun[idxx] === -1) {
-                        MEPermPrun[idxx] = depth;
-                        ++done;
-                      }
+      if (MEPermPrun[i] === select) {
+        mid = i % 24;
+        edge = ~~(i / 24);
+        for (m_0 = 0; m_0 < 10; ++m_0) {
+          edgex = EPermMove[edge][m_0];
+          symx = edgex & 15;
+          midx = MPermConj[MPermMove[mid][m_0]][symx];
+          edgex >>>= 4;
+          idx = edgex * 24 + midx;
+          if (MEPermPrun[idx] === check) {
+            ++done;
+            if (inv) {
+              MEPermPrun[i] = depth;
+              break;
+            } else {
+              MEPermPrun[idx] = depth;
+              sym = SymState[edgex];
+              if (sym != 0) {
+                for (j = 1; j < 16; ++j) {
+                  sym = sym >> 1;
+                  if ((sym & 1) === 1) {
+                    idxx = edgex * 24 + MPermConj[midx][j];
+                    if (MEPermPrun[idxx] === -1) {
+                      MEPermPrun[idxx] = depth;
+                      ++done;
                     }
                   }
                 }
@@ -175,45 +173,44 @@ async function initMCEPermPrun() {
         }
       }
     }
-    setTimeout(function () {
-      for (i = 0; i < 66432; ++i) {
-        MCPermPrun[i] = -1;
-      }
-      MCPermPrun[0] = 0;
-      depth = 0;
-      done = 1;
-      while (done < 66432) {
-        inv = depth > 7;
-        select = inv ? -1 : depth;
-        check = inv ? depth : -1;
-        ++depth;
-        for (i = 0; i < 66432; ++i) {
-            mid = i % 24;
-            corn = ~~(i / 24);
-            for (m_0 = 0; m_0 < 10; ++m_0) {
-              cornx = CPermMove[corn][ud2std[m_0]];
-              symx = cornx & 15;
-              midx = MPermConj[MPermMove[mid][m_0]][symx];
-              cornx = cornx >>> 4;
-              idx = cornx * 24 + midx;
-              if (MCPermPrun[idx] === check) {
-                ++done;
-                if (inv) {
-                  MCPermPrun[i] = depth;
-                  break;
-                } else {
-                  MCPermPrun[idx] = depth;
-                  sym = SymState[cornx];
-                  if (sym != 0) {
-                    for (j = 1; j < 16; ++j) {
-                      sym = sym >> 1;
-                      if ((sym & 1) === 1) {
-                        idxx = cornx * 24 + MPermConj[midx][j ^ e2c[j]];
-                        if (MCPermPrun[idxx] === -1) {
-                          MCPermPrun[idxx] = depth;
-                          ++done;
-                        }
-                      }
+  }
+  for (i = 0; i < 66432; ++i) {
+    MCPermPrun[i] = -1;
+  }
+  MCPermPrun[0] = 0;
+  depth = 0;
+  done = 1;
+  while (done < 66432) {
+    inv = depth > 7;
+    select = inv ? -1 : depth;
+    check = inv ? depth : -1;
+    ++depth;
+    for (i = 0; i < 66432; ++i) {
+      if (MCPermPrun[i] === select) {
+        mid = i % 24;
+        corn = ~~(i / 24);
+        for (m_0 = 0; m_0 < 10; ++m_0) {
+          cornx = CPermMove[corn][ud2std[m_0]];
+          symx = cornx & 15;
+          midx = MPermConj[MPermMove[mid][m_0]][symx];
+          cornx = cornx >>> 4;
+          idx = cornx * 24 + midx;
+          if (MCPermPrun[idx] === check) {
+            ++done;
+            if (inv) {
+              MCPermPrun[i] = depth;
+              break;
+            } else {
+              MCPermPrun[idx] = depth;
+              sym = SymState[cornx];
+              if (sym != 0) {
+                for (j = 1; j < 16; ++j) {
+                  sym = sym >> 1;
+                  if ((sym & 1) === 1) {
+                    idxx = cornx * 24 + MPermConj[midx][j ^ e2c[j]];
+                    if (MCPermPrun[idxx] === -1) {
+                      MCPermPrun[idxx] = depth;
+                      ++done;
                     }
                   }
                 }
@@ -221,9 +218,9 @@ async function initMCEPermPrun() {
             }
           }
         }
-      resolve();
-    }, 0);
-  });
+      }
+    }
+  }
 }
 
 function initMPermConj() {
@@ -274,176 +271,154 @@ function initMid3Move() {
   }
 }
 
-async function initTwistFlipSlicePrun() {
-  return new Promise(function (resolve) {
-    var SymState,
-      SymStateF,
-      c,
-      check,
-      d,
-      depth,
-      done,
-      flip,
-      flipx,
-      fsym,
-      fsymx,
-      fsymxx,
-      i,
-      idx,
-      idxx,
-      inv,
-      j,
-      k,
-      m_0,
-      select,
-      slice,
-      slicex,
-      sym,
-      symF,
-      symx,
-      tsymx,
-      twist,
-      twistx;
-    SymState = Array(324);
-    c = new CubieCube_0();
-    d = new CubieCube_0();
-    for (i = 0; i < 324; ++i) {
-      SymState[i] = 0;
-      $setTwist(c, TwistS2R[i]);
-      for (j = 0; j < 8; ++j) {
-        CornMultSym(CubeSym[SymInv[j << 1]], c, temp_0);
-        CornMultSym(temp_0, CubeSym[j << 1], d);
-        binarySearch(TwistS2R, $getTwist(d)) != 65535 &&
-          (SymState[i] = SymState[i] | (1 << j));
-      }
+function initTwistFlipSlicePrun() {
+  var SymState,
+    SymStateF,
+    c,
+    check,
+    d,
+    depth,
+    done,
+    flip,
+    flipx,
+    fsym,
+    fsymx,
+    fsymxx,
+    i,
+    idx,
+    idxx,
+    inv,
+    j,
+    k,
+    m_0,
+    select,
+    slice,
+    slicex,
+    sym,
+    symF,
+    symx,
+    tsymx,
+    twist,
+    twistx;
+  SymState = Array(324);
+  c = new CubieCube_0();
+  d = new CubieCube_0();
+  for (i = 0; i < 324; ++i) {
+    SymState[i] = 0;
+    $setTwist(c, TwistS2R[i]);
+    for (j = 0; j < 8; ++j) {
+      CornMultSym(CubeSym[SymInv[j << 1]], c, temp_0);
+      CornMultSym(temp_0, CubeSym[j << 1], d);
+      binarySearch(TwistS2R, $getTwist(d)) != 65535 &&
+        (SymState[i] = SymState[i] | (1 << j));
     }
-    SymStateF = Array(336);
-    for (i = 0; i < 336; ++i) {
-      SymStateF[i] = 0;
-      $setFlip(c, FlipS2R[i]);
-      for (j = 0; j < 8; ++j) {
-        EdgeMult(CubeSym[SymInv[j << 1]], c, temp_0);
-        EdgeMult(temp_0, CubeSym[j << 1], d);
-        binarySearch(FlipS2R, $getFlip(d)) != 65535 &&
-          (SymStateF[i] = SymStateF[i] | (1 << j));
-      }
+  }
+  SymStateF = Array(336);
+  for (i = 0; i < 336; ++i) {
+    SymStateF[i] = 0;
+    $setFlip(c, FlipS2R[i]);
+    for (j = 0; j < 8; ++j) {
+      EdgeMult(CubeSym[SymInv[j << 1]], c, temp_0);
+      EdgeMult(temp_0, CubeSym[j << 1], d);
+      binarySearch(FlipS2R, $getFlip(d)) != 65535 &&
+        (SymStateF[i] = SymStateF[i] | (1 << j));
     }
-    setTimeout(async function () {
-      for (i = 0; i < 870912; ++i) {
-        TwistFlipPrun[i] = -1;
-      }
-      for (i = 0; i < 8; ++i) {
-        TwistFlipPrun[i] = 0;
-      }
-      depth = 0;
-      done = 8;
-      await new Promise(function (resolve) {
-        function processData() {
-          setTimeout(function () {
-            const endTime = Date.now() + 50;
-            while (done < 870912 && endTime > Date.now()) {
-              inv = depth > 6;
-              select = inv ? -1 : depth;
-              check = inv ? depth : -1;
-              ++depth;
-              for (i = 0; i < 870912; ++i) {
-                if (TwistFlipPrun[i] != select) continue;
-                twist = ~~(i / 2688);
-                flip = i % 2688;
-                fsym = i & 7;
-                flip >>>= 3;
-                for (m_0 = 0; m_0 < 18; ++m_0) {
-                  twistx = TwistMove[twist][m_0];
-                  tsymx = twistx & 7;
-                  twistx >>>= 3;
-                  flipx = FlipMove[flip][Sym8Move[fsym][m_0]];
-                  fsymx = Sym8MultInv[Sym8Mult[flipx & 7][fsym]][tsymx];
-                  flipx >>>= 3;
-                  idx = twistx * 2688 + ((flipx << 3) | fsymx);
-                  if (TwistFlipPrun[idx] === check) {
-                    ++done;
-                    if (inv) {
-                      TwistFlipPrun[i] = depth;
-                      break;
-                    } else {
-                      TwistFlipPrun[idx] = depth;
-                      sym = SymState[twistx];
-                      symF = SymStateF[flipx];
-                      if (sym != 1 || symF != 1) {
-                        for (j = 0; j < 8; ++j, symF = symF >> 1) {
-                          if ((symF & 1) === 1) {
-                            fsymxx = Sym8MultInv[fsymx][j];
-                            for (k = 0; k < 8; ++k) {
-                              if ((sym & (1 << k)) != 0) {
-                                idxx =
-                                  twistx * 2688 +
-                                  ((flipx << 3) | Sym8MultInv[fsymxx][k]);
-                                if (TwistFlipPrun[idxx] === -1) {
-                                  TwistFlipPrun[idxx] = depth;
-                                  ++done;
-                                }
-                              }
-                            }
-                          }
-                        }
+  }
+  for (i = 0; i < 870912; ++i) {
+    TwistFlipPrun[i] = -1;
+  }
+  for (i = 0; i < 8; ++i) {
+    TwistFlipPrun[i] = 0;
+  }
+  depth = 0;
+  done = 8;
+  while (done < 870912) {
+    inv = depth > 6;
+    select = inv ? -1 : depth;
+    check = inv ? depth : -1;
+    ++depth;
+    for (i = 0; i < 870912; ++i) {
+      if (TwistFlipPrun[i] != select) continue;
+      twist = ~~(i / 2688);
+      flip = i % 2688;
+      fsym = i & 7;
+      flip >>>= 3;
+      for (m_0 = 0; m_0 < 18; ++m_0) {
+        twistx = TwistMove[twist][m_0];
+        tsymx = twistx & 7;
+        twistx >>>= 3;
+        flipx = FlipMove[flip][Sym8Move[fsym][m_0]];
+        fsymx = Sym8MultInv[Sym8Mult[flipx & 7][fsym]][tsymx];
+        flipx >>>= 3;
+        idx = twistx * 2688 + ((flipx << 3) | fsymx);
+        if (TwistFlipPrun[idx] === check) {
+          ++done;
+          if (inv) {
+            TwistFlipPrun[i] = depth;
+            break;
+          } else {
+            TwistFlipPrun[idx] = depth;
+            sym = SymState[twistx];
+            symF = SymStateF[flipx];
+            if (sym != 1 || symF != 1) {
+              for (j = 0; j < 8; ++j, symF = symF >> 1) {
+                if ((symF & 1) === 1) {
+                  fsymxx = Sym8MultInv[fsymx][j];
+                  for (k = 0; k < 8; ++k) {
+                    if ((sym & (1 << k)) != 0) {
+                      idxx =
+                        twistx * 2688 + ((flipx << 3) | Sym8MultInv[fsymxx][k]);
+                      if (TwistFlipPrun[idxx] === -1) {
+                        TwistFlipPrun[idxx] = depth;
+                        ++done;
                       }
                     }
                   }
                 }
               }
             }
-
-            if (done < 870912) {
-              processData();
+          }
+        }
+      }
+    }
+  }
+  for (i = 0; i < 160380; ++i) {
+    UDSliceTwistPrun[i] = -1;
+  }
+  UDSliceTwistPrun[0] = 0;
+  depth = 0;
+  done = 1;
+  while (done < 160380) {
+    inv = depth > 6;
+    select = inv ? -1 : depth;
+    check = inv ? depth : -1;
+    ++depth;
+    for (i = 0; i < 160380; ++i) {
+      if (UDSliceTwistPrun[i] === select) {
+        slice = i % 495;
+        twist = ~~(i / 495);
+        for (m_0 = 0; m_0 < 18; ++m_0) {
+          twistx = TwistMove[twist][m_0];
+          symx = twistx & 7;
+          slicex = UDSliceConj[UDSliceMove[slice][m_0]][symx];
+          twistx >>>= 3;
+          idx = twistx * 495 + slicex;
+          if (UDSliceTwistPrun[idx] === check) {
+            ++done;
+            if (inv) {
+              UDSliceTwistPrun[i] = depth;
+              break;
             } else {
-              resolve();
-            }
-          }, 0);
-        }
-        processData();
-      });
-
-      setTimeout(function () {
-        for (i = 0; i < 160380; ++i) {
-          UDSliceTwistPrun[i] = -1;
-        }
-        UDSliceTwistPrun[0] = 0;
-        depth = 0;
-        done = 1;
-        while (done < 160380) {
-          inv = depth > 6;
-          select = inv ? -1 : depth;
-          check = inv ? depth : -1;
-          ++depth;
-          for (i = 0; i < 160380; ++i) {
-            if (UDSliceTwistPrun[i] === select) {
-              slice = i % 495;
-              twist = ~~(i / 495);
-              for (m_0 = 0; m_0 < 18; ++m_0) {
-                twistx = TwistMove[twist][m_0];
-                symx = twistx & 7;
-                slicex = UDSliceConj[UDSliceMove[slice][m_0]][symx];
-                twistx >>>= 3;
-                idx = twistx * 495 + slicex;
-                if (UDSliceTwistPrun[idx] === check) {
-                  ++done;
-                  if (inv) {
-                    UDSliceTwistPrun[i] = depth;
-                    break;
-                  } else {
-                    UDSliceTwistPrun[idx] = depth;
-                    sym = SymState[twistx];
-                    if (sym != 1) {
-                      for (j = 1; j < 8; ++j) {
-                        sym = sym >> 1;
-                        if ((sym & 1) === 1) {
-                          idxx = twistx * 495 + UDSliceConj[slicex][j];
-                          if (UDSliceTwistPrun[idxx] === -1) {
-                            UDSliceTwistPrun[idxx] = depth;
-                            ++done;
-                          }
-                        }
-                      }
+              UDSliceTwistPrun[idx] = depth;
+              sym = SymState[twistx];
+              if (sym != 1) {
+                for (j = 1; j < 8; ++j) {
+                  sym = sym >> 1;
+                  if ((sym & 1) === 1) {
+                    idxx = twistx * 495 + UDSliceConj[slicex][j];
+                    if (UDSliceTwistPrun[idxx] === -1) {
+                      UDSliceTwistPrun[idxx] = depth;
+                      ++done;
                     }
                   }
                 }
@@ -451,59 +426,56 @@ async function initTwistFlipSlicePrun() {
             }
           }
         }
-        setTimeout(function () {
-          for (i = 0; i < 166320; ++i) {
-            UDSliceFlipPrun[i] = -1;
-          }
-          UDSliceFlipPrun[0] = 0;
-          depth = 0;
-          done = 1;
-          while (done < 166320) {
-            inv = depth > 6;
-            select = inv ? -1 : depth;
-            check = inv ? depth : -1;
-            ++depth;
-            for (i = 0; i < 166320; ++i) {
-              if (UDSliceFlipPrun[i] === select) {
-                slice = i % 495;
-                flip = ~~(i / 495);
-                for (m_0 = 0; m_0 < 18; ++m_0) {
-                  flipx = FlipMove[flip][m_0];
-                  symx = flipx & 7;
-                  slicex = UDSliceConj[UDSliceMove[slice][m_0]][symx];
-                  flipx >>>= 3;
-                  idx = flipx * 495 + slicex;
-                  if (UDSliceFlipPrun[idx] === check) {
-                    ++done;
-                    if (inv) {
-                      UDSliceFlipPrun[i] = depth;
-                      break;
-                    } else {
-                      UDSliceFlipPrun[idx] = depth;
-                      sym = SymStateF[flipx];
-                      if (sym != 1) {
-                        for (j = 1; j < 8; ++j) {
-                          sym = sym >> 1;
-                          if ((sym & 1) === 1) {
-                            idxx = flipx * 495 + UDSliceConj[slicex][j];
-                            if (UDSliceFlipPrun[idxx] === -1) {
-                              UDSliceFlipPrun[idxx] = depth;
-                              ++done;
-                            }
-                          }
-                        }
-                      }
+      }
+    }
+  }
+  for (i = 0; i < 166320; ++i) {
+    UDSliceFlipPrun[i] = -1;
+  }
+  UDSliceFlipPrun[0] = 0;
+  depth = 0;
+  done = 1;
+  while (done < 166320) {
+    inv = depth > 6;
+    select = inv ? -1 : depth;
+    check = inv ? depth : -1;
+    ++depth;
+    for (i = 0; i < 166320; ++i) {
+      if (UDSliceFlipPrun[i] === select) {
+        slice = i % 495;
+        flip = ~~(i / 495);
+        for (m_0 = 0; m_0 < 18; ++m_0) {
+          flipx = FlipMove[flip][m_0];
+          symx = flipx & 7;
+          slicex = UDSliceConj[UDSliceMove[slice][m_0]][symx];
+          flipx >>>= 3;
+          idx = flipx * 495 + slicex;
+          if (UDSliceFlipPrun[idx] === check) {
+            ++done;
+            if (inv) {
+              UDSliceFlipPrun[i] = depth;
+              break;
+            } else {
+              UDSliceFlipPrun[idx] = depth;
+              sym = SymStateF[flipx];
+              if (sym != 1) {
+                for (j = 1; j < 8; ++j) {
+                  sym = sym >> 1;
+                  if ((sym & 1) === 1) {
+                    idxx = flipx * 495 + UDSliceConj[slicex][j];
+                    if (UDSliceFlipPrun[idxx] === -1) {
+                      UDSliceFlipPrun[idxx] = depth;
+                      ++done;
                     }
                   }
                 }
               }
             }
           }
-          resolve();
-        }, 0);
-      }, 0);
-    }, 0);
-  });
+        }
+      }
+    }
+  }
 }
 
 function initTwistMove() {
@@ -1078,93 +1050,83 @@ function initSym() {
   }
 }
 
-async function initSym2Raw() {
-  return new Promise(function (resolve) {
-    var a, b, c, count, d, i, idx, j, m_0, mask, occ, s;
-    c = new CubieCube_0();
-    d = new CubieCube_0();
-    occ = Array(1260);
-    count = 0;
-    for (i = 0; i < 64; occ[i++] = 0);
-    for (i = 0; i < 2048; ++i) {
-      if ((occ[i >>> 5] & (1 << (i & 31))) === 0) {
-        $setFlip(c, i);
-        for (s = 0; s < 16; s = s + 2) {
-          EdgeMult(CubeSym[SymInv[s]], c, temp_0);
-          EdgeMult(temp_0, CubeSym[s], d);
-          idx = $getFlip(d);
-          occ[idx >>> 5] |= 1 << (idx & 31);
-          FlipR2S[idx] = (count << 3) | (s >>> 1);
-        }
-        FlipS2R[count++] = i;
+function initSym2Raw() {
+  var a, b, c, count, d, i, idx, j, m_0, mask, occ, s;
+  c = new CubieCube_0();
+  d = new CubieCube_0();
+  occ = Array(1260);
+  count = 0;
+  for (i = 0; i < 64; occ[i++] = 0);
+  for (i = 0; i < 2048; ++i) {
+    if ((occ[i >>> 5] & (1 << (i & 31))) === 0) {
+      $setFlip(c, i);
+      for (s = 0; s < 16; s = s + 2) {
+        EdgeMult(CubeSym[SymInv[s]], c, temp_0);
+        EdgeMult(temp_0, CubeSym[s], d);
+        idx = $getFlip(d);
+        occ[idx >>> 5] |= 1 << (idx & 31);
+        FlipR2S[idx] = (count << 3) | (s >>> 1);
       }
+      FlipS2R[count++] = i;
     }
-    setTimeout(function () {
-      count = 0;
-      for (i = 0; i < 69; occ[i++] = 0);
-      for (i = 0; i < 2187; ++i) {
-        if ((occ[i >>> 5] & (1 << (i & 31))) === 0) {
-          $setTwist(c, i);
-          for (s = 0; s < 16; s = s + 2) {
-            CornMultSym(CubeSym[SymInv[s]], c, temp_0);
-            CornMultSym(temp_0, CubeSym[s], d);
-            idx = $getTwist(d);
-            occ[idx >>> 5] |= 1 << (idx & 31);
-            TwistR2S[idx] = (count << 3) | (s >>> 1);
-          }
-          TwistS2R[count++] = i;
-        }
+  }
+  count = 0;
+  for (i = 0; i < 69; occ[i++] = 0);
+  for (i = 0; i < 2187; ++i) {
+    if ((occ[i >>> 5] & (1 << (i & 31))) === 0) {
+      $setTwist(c, i);
+      for (s = 0; s < 16; s = s + 2) {
+        CornMultSym(CubeSym[SymInv[s]], c, temp_0);
+        CornMultSym(temp_0, CubeSym[s], d);
+        idx = $getTwist(d);
+        occ[idx >>> 5] |= 1 << (idx & 31);
+        TwistR2S[idx] = (count << 3) | (s >>> 1);
       }
-      mask = Array(2);
-      mask[0] = Array(56);
-      mask[1] = Array(56);
-      for (i = 0; i < 56; ++i) {
-        mask[0][i] = mask[1][i] = 0;
-      }
-      setTimeout(function () {
-        for (i = 0; i < 40320; ++i) {
-          set8Perm(c.ep, i);
-          a = ~~($getURtoUL(c) / 6);
-          b = ~~($getDRtoDL(c) / 6);
-          mask[b >> 5][a] |= 1 << (b & 0x1f);
-        }
-        for (i = 0; i < 56; ++i) {
-          count = 0;
-          for (j = 0; j < 56; ++j) {
-            (mask[j >> 5][i] & (1 << (j & 0x1f))) != 0 &&
-              (merge[i][j] = count++);
-          }
-        }
-        count = 0;
-        for (i = 0; i < 1260; occ[i++] = 0);
+      TwistS2R[count++] = i;
+    }
+  }
 
-        setTimeout(function () {
-          for (i = 0; i < 40320; ++i) {
-            if ((occ[i >>> 5] & (1 << (i & 31))) === 0) {
-              set8Perm(c.ep, i);
-              for (s = 0; s < 16; ++s) {
-                EdgeMult(CubeSym[SymInv[s]], c, temp_0);
-                EdgeMult(temp_0, CubeSym[s], d);
-                idx = get8Perm(d.ep);
-                occ[idx >>> 5] |= 1 << (idx & 31);
-                a = $getURtoUL(d);
-                b = $getDRtoDL(d);
-                m_0 =
-                  merge[~~(a / 6)][~~(b / 6)] * 4032 +
-                  a * 12 +
-                  (b % 6) * 2 +
-                  get8Parity(idx);
-                MtoEPerm[m_0] = (count << 4) | s;
-                EPermR2S[idx] = (count << 4) | s;
-              }
-              EPermS2R[count++] = i;
-            }
-          }
-          resolve();
-        }, 0);
-      }, 0);
-    }, 0);
-  });
+  mask = Array(2);
+  mask[0] = Array(56);
+  mask[1] = Array(56);
+  for (i = 0; i < 56; ++i) {
+    mask[0][i] = mask[1][i] = 0;
+  }
+  for (i = 0; i < 40320; ++i) {
+    set8Perm(c.ep, i);
+    a = ~~($getURtoUL(c) / 6);
+    b = ~~($getDRtoDL(c) / 6);
+    mask[b >> 5][a] |= 1 << (b & 0x1f);
+  }
+  for (i = 0; i < 56; ++i) {
+    count = 0;
+    for (j = 0; j < 56; ++j) {
+      (mask[j >> 5][i] & (1 << (j & 0x1f))) != 0 && (merge[i][j] = count++);
+    }
+  }
+  count = 0;
+  for (i = 0; i < 1260; occ[i++] = 0);
+  for (i = 0; i < 40320; ++i) {
+    if ((occ[i >>> 5] & (1 << (i & 31))) === 0) {
+      set8Perm(c.ep, i);
+      for (s = 0; s < 16; ++s) {
+        EdgeMult(CubeSym[SymInv[s]], c, temp_0);
+        EdgeMult(temp_0, CubeSym[s], d);
+        idx = get8Perm(d.ep);
+        occ[idx >>> 5] |= 1 << (idx & 31);
+        a = $getURtoUL(d);
+        b = $getDRtoDL(d);
+        m_0 =
+          merge[~~(a / 6)][~~(b / 6)] * 4032 +
+          a * 12 +
+          (b % 6) * 2 +
+          get8Parity(idx);
+        MtoEPerm[m_0] = (count << 4) | s;
+        EPermR2S[idx] = (count << 4) | s;
+      }
+      EPermS2R[count++] = i;
+    }
+  }
 }
 
 function set8Perm(arr, idx) {
@@ -1435,7 +1397,8 @@ function $phase2(obj, edge, esym, corn, csym, mid, maxl, depth, lm) {
 }
 
 function $solution(obj, facelets) {
-  var cc, i;
+  var $e0, cc, i, s;
+  init_0();
   for (i = 0; i < 54; ++i) {
     switch (facelets.charCodeAt(i)) {
       case 85:
@@ -1498,66 +1461,42 @@ _.useSeparator = false;
 _.valid1 = 0;
 _.valid2 = 0;
 
-async function init_0() {
+function init_0() {
   if (inited) return;
-  return new Promise(function (resolve) {
-    $clinit_Util();
-    setTimeout(function () {
-      console.log("[0/9] Initializing Cubie Cube...");
-      $clinit_CubieCube();
-      FlipR2S = Array(2048);
-      TwistR2S = Array(2187);
-      EPermR2S = Array(40320);
-      setTimeout(async function () {
-        console.log("[1/9] Initializing Sym2Raw...");
-        await initSym2Raw();
-        setTimeout(function () {
-          console.log("[2/9] Initializing CoordCube...");
-          $clinit_CoordCube();
-          setTimeout(function () {
-            console.log("[3/9] Initializing Perm, Flip, and Twist Moves...");
-            initCPermMove();
-            setTimeout(function () {
-              initEPermMove();
-              initFlipMove();
-              initTwistMove();
-              setTimeout(function () {
-                console.log("[4/9] Initializing UDSlice...");
-                EPermR2S = null;
-                FlipR2S = null;
-                TwistR2S = null;
-                initUDSliceMove();
-                initUDSliceConj();
-                setTimeout(function () {
-                  console.log("[5/9] Initializing Mid3Move...");
-                  initMid3Move();
-                  initMid32MPerm();
-                  initCParity();
-                  setTimeout(function () {
-                    console.log("[6/9] Initializing Perms...");
-                    initMPermMove();
-                    initMPermConj();
-                    setTimeout(async function () {
-                      console.log("[7/9] Initializing TwistFlipSlicePrun.. .");
-                      await initTwistFlipSlicePrun();
-                      setTimeout(async function () {
-                        console.log("[8/9] Initializing MCEPermPrum...");
-                        await initMCEPermPrun();
-                        console.log("[9/9] Done initializing 3x3x3...");
-                        inited = true;
-                        console.log("resolve2");
-                        resolve();
-                      }, 0);
-                    }, 0);
-                  }, 0);
-                }, 0);
-              }, 0);
-            }, 0);
-          }, 0);
-        }, 0);
-      }, 0);
-    }, 0);
-  });
+  $clinit_Util();
+  // [0/9] Initializing Cubie Cube...
+  $clinit_CubieCube();
+  FlipR2S = Array(2048);
+  TwistR2S = Array(2187);
+  EPermR2S = Array(40320);
+  // [1/9] Initializing Sym2Raw...
+  initSym2Raw();
+  // [2/9] Initializing CoordCube...
+  $clinit_CoordCube();
+  // [3/9] Initializing Perm, Flip, and Twist Moves...
+  initCPermMove();
+  initEPermMove();
+  initFlipMove();
+  initTwistMove();
+  // [4/9] Initializing UDSlice...
+  EPermR2S = null;
+  FlipR2S = null;
+  TwistR2S = null;
+  initUDSliceMove();
+  initUDSliceConj();
+  // [5/9] Initializing Mid3Move...
+  initMid3Move();
+  initMid32MPerm();
+  initCParity();
+  // [6/9] Initializing Perms...
+  initMPermMove();
+  initMPermConj();
+  // [7/9] Initializing TwistFlipSlicePrun.. .
+  initTwistFlipSlicePrun();
+  // [8/9] Initializing MCEPermPrum...
+  initMCEPermPrun();
+  // [9/9] Done initializing 3x3x3...
+  inited = true;
 }
 
 function randomCube_0() {
@@ -1838,16 +1777,16 @@ var Cnk,
 var initialized = false;
 var search;
 
-async function ini() {
+var ini = function () {
   if (!initialized) {
     search = new Search();
-    await init_0();
+    init_0();
     initialized = true;
   }
-}
+};
 
-async function getRandomScramble() {
-  await ini();
+var getRandomScramble = function () {
+  ini();
 
   var posit = randomCube_0();
   var solution = $solution(search, posit);
@@ -1856,7 +1795,7 @@ async function getRandomScramble() {
     state: posit,
     string: solution.trim(),
   };
-}
+};
 
 export default {
   getRandomScramble,
