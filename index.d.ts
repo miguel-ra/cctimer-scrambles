@@ -1,13 +1,6 @@
 export type Scramble = {
   string: string;
-  state: Array;
+  state: string | Array;
 };
 
-export type ScrambleImageProps = {
-  randomScramble: Scramble;
-} & HTMLProps<HTMLElement>;
-
-export type ScrambleGenerator = {
-  getRandomScramble: () => Scramble;
-  ScrambleImage: (props: ScrambleImageProps) => JSX.Element;
-};
+export type ScrambleGenerator = () => Scramble;

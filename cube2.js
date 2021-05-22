@@ -494,7 +494,7 @@ function initialize() {
 */
 }
 
-const getRandomScramble = function () {
+const generateScramble = function () {
   initializeFull();
 
   mix2();
@@ -530,6 +530,4 @@ var initializeFull = function (continuation, _) {
   }
 };
 
-export default {
-  getRandomScramble,
-};
+export default generateScramble;

@@ -1785,7 +1785,7 @@ var ini = function () {
   }
 };
 
-var getRandomScramble = function () {
+var generateScramble = function () {
   ini();
 
   var posit = randomCube_0();
@@ -1797,6 +1797,4 @@ var getRandomScramble = function () {
   };
 };
 
-export default {
-  getRandomScramble,
-};
+export default generateScramble;
