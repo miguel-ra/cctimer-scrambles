@@ -429,7 +429,7 @@ function generateCubeNScramble(size, seqlen, mult) {
     imagestring(0);
 
     return {
-      state: posit,
+      state: posit.join(''),
       string: scramblestring(0).trim(),
     };
   };
