@@ -1,4 +1,3 @@
-import _jsxRuntime from "react/jsx-runtime";
 import randomInt from './lib/randomInt';
 
 function generateScramble(){

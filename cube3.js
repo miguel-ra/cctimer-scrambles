@@ -9,8 +9,6 @@ Compiled to Javascript using GWT.
 (There may be a lot of redundant code right now, but it's still really fast.)
 
  */
-
-import _jsxRuntime from "react/jsx-runtime";
 import randomInt from "./lib/randomInt";
 
 var _;

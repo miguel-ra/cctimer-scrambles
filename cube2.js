@@ -8,7 +8,6 @@ Code taken from the official WCA scrambler.
 Ported by Lucas Garron, November 23, 2011.
 
  */
-import _jsxRuntime from "react/jsx-runtime";
 import randomInt from "./lib/randomInt";
 
 var posit = new Array();
@@ -22,15 +21,6 @@ function initbrd() {
                 0, 0, 0, 0);
 }
 initbrd();
-function solved() {
-  for (let i = 0; i < 24; i += 4) {
-    c = posit[i];
-    for (let j = 1; j < 4; j++) {
-      if (posit[i + j] != c) return false;
-    }
-  }
-  return true;
-}
 
 // ----[ This function is replaced by mix2() ]------
 /*
@@ -501,7 +491,7 @@ const generateScramble = function () {
   const solution = solve();
 
   return {
-    state: posit,
+    state: posit.join(''),
     string: solution.trim(),
   };
 };
