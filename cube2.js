@@ -492,7 +492,7 @@ const generateScramble = function () {
 
   return {
     state: posit.join(''),
-    string: solution.trim(),
+    text: solution.trim(),
   };
 };
 

@@ -1,6 +1,6 @@
 export type Scramble = {
-  string: string;
-  state: string | Array;
+  text: string;
+  state: string;
 };
 
 export type ScrambleGenerator = () => Scramble;

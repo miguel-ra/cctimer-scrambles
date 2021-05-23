@@ -83,7 +83,7 @@ function generateScramble(){
 
   return {
     state: `${posit.join(',')};${pegs.join(',')}`,
-    string: scrambleString.trim()
+    text: scrambleString.trim()
   };
 }
 

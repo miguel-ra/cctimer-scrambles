@@ -1791,7 +1791,7 @@ var generateScramble = function () {
 
   return {
     state: posit,
-    string: solution.trim(),
+    text: solution.trim(),
   };
 };
 

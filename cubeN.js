@@ -22,28 +22,13 @@ function generateCubeNScramble(size, seqlen, mult) {
   // list of available colours
   var colorList = new Array(
     "y",
-    "yellow.jpg",
-    "yellow",
     "b",
-    "blue.jpg",
-    "blue",
     "r",
-    "red.jpg",
-    "red",
     "w",
-    "white.jpg",
-    "white",
     "g",
-    "green.jpg",
-    "green",
     "o",
-    "orange.jpg",
-    "orange",
     "p",
-    "purple.jpg",
-    "purple",
     "0",
-    "grey.jpg",
     "grey" // used for unrecognised letters, or when zero used.
   );
 
@@ -430,7 +415,7 @@ function generateCubeNScramble(size, seqlen, mult) {
 
     return {
       state: posit.join(''),
-      string: scramblestring(0).trim(),
+      text: scramblestring(0).trim(),
     };
   };
 
